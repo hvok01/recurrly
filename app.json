@@ -4,13 +4,15 @@
     "slug": "recurrly",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/assets/icons/logo.png",
     "scheme": "recurrly",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "bundleIdentifier": "com.hvok01.recurrly",
+      "icon": "./assets/assets/icons/logo.png"
     },
     "android": {
+      "package": "com.hvok01.recurrly",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -30,15 +32,35 @@
         {
           "backgroundColor": "#208AEF",
           "android": {
-            "image": "./assets/images/splash-icon.png",
+            "image": "./assets/assets/images/splash-pattern.png",
             "imageWidth": 76
           }
+        }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": [
+            "./assets/assets/fonts/PlusJakartaSans-Regular.ttf",
+            "./assets/assets/fonts/PlusJakartaSans-Bold.ttf",
+            "./assets/assets/fonts/PlusJakartaSans-ExtraBold.ttf",
+            "./assets/assets/fonts/PlusJakartaSans-Light.ttf",
+            "./assets/assets/fonts/PlusJakartaSans-Medium.ttf",
+            "./assets/assets/fonts/PlusJakartaSans-SemiBold.ttf"
+          ]
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "50f5cc91-c7c5-49ac-9725-cf6a5585c7ca"
+      }
+    },
+    "owner": "hvok"
   }
 }
