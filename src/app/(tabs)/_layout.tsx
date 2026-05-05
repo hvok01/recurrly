@@ -53,7 +53,6 @@ export default function TabsLayout() {
           height: tabBar.iconFrame,
           alignItems: 'center',
         }
-
     }}>
       {
         tabs.map((tab) => {

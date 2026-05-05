@@ -2,8 +2,9 @@ import { ClerkProvider, useAuth } from '@clerk/expo';
 import { tokenCache } from '@clerk/expo/token-cache';
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useGlobalSearchParams, usePathname } from "expo-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "../../global.css";
+import { getHasSignedInBefore, setHasSignedInBefore } from '../../lib/hasSignedInBefore';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -14,7 +15,8 @@ if (!publishableKey) {
 }
 
 function RootLayoutContent() {
-  const { isLoaded: authLoaded } = useAuth();
+  const { isLoaded: authLoaded, isSignedIn } = useAuth();
+  const [storageReady, setStorageReady] = useState(false);
   const pathname = usePathname();
   const params = useGlobalSearchParams();
   const previousPathname = useRef<string | undefined>(undefined);
@@ -35,14 +37,28 @@ function RootLayoutContent() {
   })
 
   useEffect(() => {
-    // Hide splash only when both fonts and auth are loaded
-    if (fontsLoaded && authLoaded) {
-      SplashScreen.hideAsync()
-    }
-  }, [fontsLoaded, authLoaded])
+    let cancelled = false;
+    getHasSignedInBefore().finally(() => {
+      if (!cancelled) setStorageReady(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-  // Don't render app until both are ready
-  if (!fontsLoaded || !authLoaded) return null;
+  useEffect(() => {
+    if (authLoaded && isSignedIn) {
+      void setHasSignedInBefore(true);
+    }
+  }, [authLoaded, isSignedIn]);
+
+  useEffect(() => {
+    if (fontsLoaded && authLoaded && storageReady) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, authLoaded, storageReady]);
+
+  if (!fontsLoaded || !authLoaded || !storageReady) return null;
 
   return <Stack screenOptions={{ headerShown: false }} />;
 }
