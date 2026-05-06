@@ -1,8 +1,10 @@
+import { Link } from "expo-router";
 import { styled } from "nativewind";
 import { useState } from "react";
-import { FlatList, Text, TextInput, View } from 'react-native';
+import { FlatList, Image, Pressable, Text, TextInput, View } from 'react-native';
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import SubscriptionCard from '../../../components/SubscriptionCard';
+import { icons } from "../../../constants/icons";
 import { useSubscriptionStore } from '../../../lib/subscriptionStore';
 
 const SafeAreaView = styled(RNSafeAreaView);
@@ -25,7 +27,17 @@ const Subscriptions = () => {
                 keyExtractor={(item) => item.id}
                 ListHeaderComponent={
                     <View className="px-5 pt-5">
-                        <Text className="text-3xl font-bold text-dark mb-5">Subscriptions</Text>
+                        <View className="flex-row items-center justify-between mb-5">
+                            <Link href={"/"} asChild>
+                                <Pressable className='rounded-full p-2 border'>
+                                    <Image source={icons.back} className="back-icon"/>
+                                </Pressable>
+                            </Link>
+                            <Text className="text-3xl font-bold text-dark">My Subscriptions</Text>
+                            <Pressable className='rounded-full p-2 border'>
+                                <Image source={icons.menu} className="menu-icon" />
+                            </Pressable>
+                        </View>
                         <TextInput
                             className="bg-card rounded-xl px-4 py-3 text-dark mb-4"
                             placeholder="Search subscriptions..."

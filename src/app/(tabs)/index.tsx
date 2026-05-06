@@ -59,7 +59,7 @@ export default function App() {
                   </Text>
                 </View>
 
-                <Pressable onPress={() => setIsModalVisible(true)}>
+                <Pressable onPress={() => setIsModalVisible(true)} className='rounded-full p-2 border'>
                     <Image source={icons.add} className="home-add-icon" />
                 </Pressable>
               </View>
