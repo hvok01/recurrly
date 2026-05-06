@@ -78,7 +78,7 @@ export default function App() {
               </View>
 
               <View className="mb-5">
-                <ListHeading title="Upcoming"/>
+                <ListHeading title="Upcoming" url='/(tabs)/insights'/>
                 <FlatList
                   data={UPCOMING_SUBSCRIPTIONS}
                   renderItem={({ item }) => (
@@ -91,7 +91,7 @@ export default function App() {
                 />
               </View>
 
-              <ListHeading title="All Subscriptions"/>
+              <ListHeading title="All Subscriptions" url='/(tabs)/subscriptions'/>
             </>
           )}
           data={subscriptions}
