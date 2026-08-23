@@ -1,5 +1,4 @@
-import { create } from 'zustand';
-import { HOME_SUBSCRIPTIONS } from '../constants/data';
+import { create } from "zustand";
 
 interface SubscriptionStore {
   subscriptions: Subscription[];
@@ -8,8 +7,9 @@ interface SubscriptionStore {
 }
 
 export const useSubscriptionStore = create<SubscriptionStore>((set) => ({
-  subscriptions: HOME_SUBSCRIPTIONS,
-  addSubscription: (subscription) =>
-    set((state) => ({ subscriptions: [subscription, ...state.subscriptions] })),
+  subscriptions: [],
+  addSubscription: (subscription) => {
+    set((state) => ({ subscriptions: [subscription, ...state.subscriptions] }));
+  },
   setSubscriptions: (subscriptions) => set({ subscriptions }),
 }));

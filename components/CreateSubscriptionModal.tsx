@@ -1,8 +1,16 @@
-import clsx from 'clsx';
-import dayjs from 'dayjs';
-import React, { useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { icons } from '../constants/icons';
+import clsx from "clsx";
+import dayjs from "dayjs";
+import React, { useState } from "react";
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 interface CreateSubscriptionModalProps {
   visible: boolean;
@@ -10,23 +18,83 @@ interface CreateSubscriptionModalProps {
   onSubmit: (subscription: Subscription) => void;
 }
 
-type Frequency = 'Monthly' | 'Yearly';
-type Category = 'Entertainment' | 'AI Tools' | 'Developer Tools' | 'Design' | 'Productivity' | 'Other';
-const CATEGORIES: Category[] = ['Entertainment', 'AI Tools', 'Developer Tools', 'Design', 'Productivity', 'Other'];
+type Frequency = "Monthly" | "Yearly";
+type Category =
+  | "Entertainment"
+  | "AI Tools"
+  | "Developer Tools"
+  | "Design"
+  | "Productivity"
+  | "Other";
+const CATEGORIES: Category[] = [
+  "Entertainment",
+  "AI Tools",
+  "Developer Tools",
+  "Design",
+  "Productivity",
+  "Other",
+];
 const CATEGORY_COLORS: Record<Category, string> = {
-  'Entertainment': '#ff6b6b',
-  'AI Tools': '#b8d4e3',
-  'Developer Tools': '#e8def8',
-  'Design': '#f5c542',
-  'Productivity': '#95e1d3',
-  'Other': '#d4d4d4',
+  Entertainment: "#ff6b6b",
+  "AI Tools": "#b8d4e3",
+  "Developer Tools": "#e8def8",
+  Design: "#f5c542",
+  Productivity: "#95e1d3",
+  Other: "#d4d4d4",
 };
 
-const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscriptionModalProps) => {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [frequency, setFrequency] = useState<Frequency>('Monthly');
-  const [category, setCategory] = useState<Category>('Other');
+const imagesStock = [
+  {
+    name: "Notion",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273692/notion.png",
+  },
+  {
+    name: "OpenIA",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273692/openai.png",
+  },
+  {
+    name: "Spotify",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273692/spotify.png",
+  },
+  {
+    name: "Netflix",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273692/netflix.png",
+  },
+  {
+    name: "Dropbox",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/dropbox.png",
+  },
+  {
+    name: "Github",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/github.png",
+  },
+  {
+    name: "Figma",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/figma.png",
+  },
+  {
+    name: "Claude",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/claude.png",
+  },
+  {
+    name: "Canva",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/canva.png",
+  },
+  {
+    name: "Adobe",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/adobe.png",
+  },
+];
+
+const CreateSubscriptionModal = ({
+  visible,
+  onClose,
+  onSubmit,
+}: CreateSubscriptionModalProps) => {
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [frequency, setFrequency] = useState<Frequency>("Monthly");
+  const [category, setCategory] = useState<Category>("Other");
 
   // Improved price validation
   const isValidPrice = () => {
@@ -38,26 +106,35 @@ const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscript
     return Number.isFinite(numValue) && numValue > 0;
   };
 
-  const isValidForm = name.trim() !== '' && isValidPrice();
+  const isValidForm = name.trim() !== "" && isValidPrice();
 
   const handleSubmit = () => {
     if (!isValidForm) return;
 
     const priceValue = Number(price.trim());
     const now = dayjs();
-    const renewalDate = frequency === 'Monthly' ? now.add(1, 'month') : now.add(1, 'year');
+    const renewalDate =
+      frequency === "Monthly" ? now.add(1, "month") : now.add(1, "year");
 
     const newSubscription: Subscription = {
       id: `sub-${Date.now()}`,
       name: name.trim(),
       price: priceValue,
-      currency: 'USD',
-      frequency,
+      plan: "PRO Plan",
+      currency: "USD",
       category,
-      status: 'active',
+      imageUrl:
+        imagesStock.filter((img) =>
+          name.trim().toLowerCase().includes(img.name.trim().toLowerCase()),
+        ).length > 0
+          ? imagesStock.filter((img) =>
+              name.trim().toLowerCase().includes(img.name.trim().toLowerCase()),
+            )[0].url
+          : "https://res.cloudinary.com/klytvy3w/image/upload/v1787273692/netflix.png",
+      paymentMethod: "Visa ending in 8530",
+      status: "active",
       startDate: now.toISOString(),
       renewalDate: renewalDate.toISOString(),
-      icon: icons.plus,
       billing: frequency,
       color: CATEGORY_COLORS[category],
     };
@@ -69,10 +146,10 @@ const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscript
   };
 
   const resetForm = () => {
-    setName('');
-    setPrice('');
-    setFrequency('Monthly');
-    setCategory('Other');
+    setName("");
+    setPrice("");
+    setFrequency("Monthly");
+    setCategory("Other");
   };
 
   const handleClose = () => {
@@ -88,12 +165,15 @@ const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscript
       onRequestClose={handleClose}
     >
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
         className="flex-1"
         keyboardVerticalOffset={0}
       >
         <Pressable className="modal-overlay" onPress={handleClose}>
-          <Pressable className="modal-container" onPress={(e) => e.stopPropagation()}>
+          <Pressable
+            className="modal-container"
+            onPress={(e) => e.stopPropagation()}
+          >
             <View className="modal-header">
               <Text className="modal-title">New Subscription</Text>
               <Pressable className="modal-close" onPress={handleClose}>
@@ -134,18 +214,34 @@ const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscript
                 <Text className="auth-label">Frequency</Text>
                 <View className="picker-row">
                   <Pressable
-                    className={clsx('picker-option', frequency === 'Monthly' && 'picker-option-active')}
-                    onPress={() => setFrequency('Monthly')}
+                    className={clsx(
+                      "picker-option",
+                      frequency === "Monthly" && "picker-option-active",
+                    )}
+                    onPress={() => setFrequency("Monthly")}
                   >
-                    <Text className={clsx('picker-option-text', frequency === 'Monthly' && 'picker-option-text-active')}>
+                    <Text
+                      className={clsx(
+                        "picker-option-text",
+                        frequency === "Monthly" && "picker-option-text-active",
+                      )}
+                    >
                       Monthly
                     </Text>
                   </Pressable>
                   <Pressable
-                    className={clsx('picker-option', frequency === 'Yearly' && 'picker-option-active')}
-                    onPress={() => setFrequency('Yearly')}
+                    className={clsx(
+                      "picker-option",
+                      frequency === "Yearly" && "picker-option-active",
+                    )}
+                    onPress={() => setFrequency("Yearly")}
                   >
-                    <Text className={clsx('picker-option-text', frequency === 'Yearly' && 'picker-option-text-active')}>
+                    <Text
+                      className={clsx(
+                        "picker-option-text",
+                        frequency === "Yearly" && "picker-option-text-active",
+                      )}
+                    >
                       Yearly
                     </Text>
                   </Pressable>
@@ -158,10 +254,18 @@ const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscript
                   {CATEGORIES.map((cat) => (
                     <Pressable
                       key={cat}
-                      className={clsx('category-chip', category === cat && 'category-chip-active')}
+                      className={clsx(
+                        "category-chip",
+                        category === cat && "category-chip-active",
+                      )}
                       onPress={() => setCategory(cat)}
                     >
-                      <Text className={clsx('category-chip-text', category === cat && 'category-chip-text-active')}>
+                      <Text
+                        className={clsx(
+                          "category-chip-text",
+                          category === cat && "category-chip-text-active",
+                        )}
+                      >
                         {cat}
                       </Text>
                     </Pressable>
@@ -170,7 +274,10 @@ const CreateSubscriptionModal = ({ visible, onClose, onSubmit }: CreateSubscript
               </View>
 
               <Pressable
-                className={clsx('auth-button', !isValidForm && 'auth-button-disabled')}
+                className={clsx(
+                  "auth-button",
+                  !isValidForm && "auth-button-disabled",
+                )}
                 onPress={handleSubmit}
                 disabled={!isValidForm}
               >
