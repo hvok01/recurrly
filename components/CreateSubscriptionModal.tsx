@@ -84,6 +84,87 @@ const imagesStock = [
     name: "Adobe",
     url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787273691/adobe.png",
   },
+
+  {
+    name: "Youtube",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613012/youtube.png",
+  },
+  {
+    name: "Prime",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613012/primevideo.png",
+  },
+  {
+    name: "Playstation",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613011/playstation.png",
+  },
+  {
+    name: "Perplexity",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613011/perplexity.png",
+  },
+  {
+    name: "Paramount",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613010/paramount.png",
+  },
+  {
+    name: "Nordvpn",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613010/nordvpn.png",
+  },
+  {
+    name: "Hbo",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613009/hbomax.png",
+  },
+  {
+    name: "Nintendo",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613010/nintendo.png",
+  },
+  {
+    name: "Microsoft",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613009/microsoft.png",
+  },
+  {
+    name: "Grammarly",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613008/grammarly.png",
+  },
+  {
+    name: "Dazn",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/dazn.png",
+  },
+  {
+    name: "Gemini",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613007/gemini.png",
+  },
+  {
+    name: "Evernote",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/evernote.png",
+  },
+  {
+    name: "Disney",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/disneyplus.png",
+  },
+  {
+    name: "Crunchyroll",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/crunchyroll.png",
+  },
+  {
+    name: "Appletv",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/appletv.png",
+  },
+  {
+    name: "Appletv",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/appletv.png",
+  },
+  {
+    name: "1password",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/1password.png",
+  },
+  {
+    name: "Xbox",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787611922/xbox.png",
+  },
+  {
+    name: "default",
+    url: "https://res.cloudinary.com/klytvy3w/image/upload/v1787613006/appletv.png",
+  },
 ];
 
 const CreateSubscriptionModal = ({
@@ -130,7 +211,7 @@ const CreateSubscriptionModal = ({
           ? imagesStock.filter((img) =>
               name.trim().toLowerCase().includes(img.name.trim().toLowerCase()),
             )[0].url
-          : "https://res.cloudinary.com/klytvy3w/image/upload/v1787273692/netflix.png",
+          : "https://res.cloudinary.com/klytvy3w/image/upload/v1787614018/default.png",
       paymentMethod: "Visa ending in 8530",
       status: "active",
       startDate: now.toISOString(),
