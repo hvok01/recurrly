@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { Image, Pressable, Text, View } from "react-native";
 import {
-    formatCurrency,
-    formatStatusLabel,
-    formatSubscriptionDateTime,
+  formatCurrency,
+  formatStatusLabel,
+  formatSubscriptionDateTime,
 } from "../lib/utils";
 
 export default function SubscriptionCard({
@@ -21,6 +21,7 @@ export default function SubscriptionCard({
   paymentMethod,
   startDate,
   status,
+  onEdit,
 }: SubscriptionCardProps) {
   const fallback = "Not provided";
   return (
@@ -119,6 +120,19 @@ export default function SubscriptionCard({
                 </Text>
               </View>
             </View>
+            {/* <View className="sub-row">
+              <View className="sub-row-copy buttons-standard-container">
+                <Pressable className="button-standard button-remove-base">
+                  <Text className="button-standard-text">Delete</Text>
+                </Pressable>
+                <Pressable
+                  className="button-standard button-edit-base"
+                  onPress={onEdit}
+                >
+                  <Text className="button-standard-text">Edit</Text>
+                </Pressable>
+              </View>
+            </View> */}
           </View>
         </View>
       )}

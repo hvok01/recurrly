@@ -8,10 +8,7 @@ import CreateSubscriptionModal from "../../../components/CreateSubscriptionModal
 import ListHeading from "../../../components/ListHeading";
 import SubscriptionCard from "../../../components/SubscriptionCard";
 import UpcomingSubscriptionCard from "../../../components/UpcomingSubscriptionCard";
-import {
-  getUpcomingSubscriptions,
-  homeBalanceCalculation,
-} from "../../../constants/data";
+import { getUpcomingSubscriptions } from "../../../constants/data";
 import { icons } from "../../../constants/icons";
 import images from "../../../constants/images";
 import "../../../global.css";
@@ -20,16 +17,23 @@ import { formatCurrency } from "../../../lib/utils";
 
 const SafeAreaView = styled(RNSafeAreaView);
 const apiUrl = process.env.EXPO_PUBLIC_API_URL!;
+const pageSize = 5;
 
 export default function App() {
   const { user } = useUser();
   const { getToken } = useAuth();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [balanceInfo, setBalanceInfo] = useState<{
+    amount: number;
+    nextRenewalDate: null | Date;
+  }>({ amount: 0, nextRenewalDate: null });
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<
     string | null
   >(null);
-  const { subscriptions, addSubscription, setSubscriptions } =
+  const { subscriptions, addSubscription, setSubscriptions, addSubscriptions } =
     useSubscriptionStore();
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   // Get upcoming subscriptions (active subscriptions with renewal date within next 7 days)
   const upcomingSubscriptions = useMemo(() => {
@@ -51,6 +55,8 @@ export default function App() {
       currentId === item.id ? null : item.id,
     );
   };
+
+  const handleSubscriptionOnPressEdit = (item: Subscription) => {};
 
   const handleCreateSubscription = (newSubscription: Subscription) => {
     const addNewSubscription = async () => {
@@ -90,10 +96,13 @@ export default function App() {
   useEffect(() => {
     const getSubscriptions = async () => {
       try {
+        if (loading) return;
+
+        setLoading(true);
         const token = await getToken();
 
         const response = await fetch(
-          `${apiUrl}/subscriptions?pageSize=5&pageCount=1`,
+          `${apiUrl}/subscriptions?pageSize=${pageSize}&pageCount=${page}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -113,11 +122,76 @@ export default function App() {
         }
       } catch (error) {
         console.log("ERROR getting subscriptions:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const getBalance = async () => {
+      try {
+        const token = await getToken();
+
+        const responseBalance = await fetch(`${apiUrl}/subscriptions/balance`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const fetchedBalance = await responseBalance.json();
+
+        if (fetchedBalance && fetchedBalance.success) {
+          if (fetchedBalance.data) {
+            setBalanceInfo(fetchedBalance.data);
+          }
+        }
+      } catch (error) {
+        console.log("ERROR getting balance:", error);
       }
     };
 
     getSubscriptions();
+    getBalance(); //432.88
   }, []);
+
+  const fetchMoreSubscriptions = async () => {
+    if (loading) return;
+
+    setLoading(true);
+
+    try {
+      const nextPage = page + 1;
+      const token = await getToken();
+
+      const response = await fetch(
+        `${apiUrl}/subscriptions?pageSize=${pageSize}&pageCount=${nextPage}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const fetchedSubscriptions = await response.json();
+
+      if (fetchedSubscriptions.data && fetchedSubscriptions.success) {
+        if (
+          fetchedSubscriptions.data.subscriptions &&
+          fetchedSubscriptions.data.subscriptions.length > 0
+        ) {
+          addSubscriptions(fetchedSubscriptions.data.subscriptions);
+
+          setPage(nextPage);
+        }
+      }
+    } catch (error) {
+      console.log(
+        "Error al obtener mas subscripciones: ",
+        JSON.stringify(error),
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Get user display name: firstName, fullName, or email
   const displayName =
@@ -155,13 +229,11 @@ export default function App() {
 
               <View className="home-balance-row">
                 <Text className="home-balance-amount">
-                  {formatCurrency(homeBalanceCalculation(subscriptions).amount)}
+                  {formatCurrency(balanceInfo.amount)}
                 </Text>
                 <Text className="home-balance-date">
-                  {homeBalanceCalculation(subscriptions).nextRenewalDate
-                    ? dayjs(
-                        homeBalanceCalculation(subscriptions).nextRenewalDate,
-                      ).format("MM/DD")
+                  {balanceInfo.nextRenewalDate
+                    ? dayjs(balanceInfo.nextRenewalDate).format("MM/DD")
                     : "--"}
                 </Text>
               </View>
@@ -208,6 +280,7 @@ export default function App() {
           <Text className="home-empty-state">No subscription yet.</Text>
         }
         contentContainerClassName="pb-30"
+        onEndReached={fetchMoreSubscriptions}
       />
       <CreateSubscriptionModal
         visible={isModalVisible}
